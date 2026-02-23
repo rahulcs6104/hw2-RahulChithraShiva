@@ -24,7 +24,26 @@ class HomeWork2:
     #     3   4
 
     def constructBinaryTree(self, input) -> TreeNode:
-        pass
+        
+        sign = ["+","-","/","*"]
+        temp_stack = []
+
+        for i in input:
+            if i not in sign: #if it is a number
+                num_node = Treenode(i)
+                temp_stack.append(num_node)
+            else:             #if it is a sign
+                sign_node = TreeNode(i)
+                sign_node.right = temp_stack.pop()
+                sign_node.left = temp_stack.pop()
+                temp_stack.append(sign_node)
+        return stack.pop()
+
+                
+
+
+
+
 
 
 
