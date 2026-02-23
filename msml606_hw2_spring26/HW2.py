@@ -116,8 +116,29 @@ class Stack:
     # Use your own stack implementation to solve problem 3
 
     def __init__(self):
-        # TODO: initialize the stack
-        pass
+        self.list=[]
+        self.size = 0
+        self.top = -1 
+
+    def push(self,value):
+        self.list.append(value)
+        size += 1
+        top += 1
+
+
+    def pop(self):
+        if self.size == 0:
+            raise IndexError("Stack is empty , cannot pop")
+        pop_num = self.list.remove(top)
+        size -= 1
+        top -= 1
+        return pop_num
+
+    def size(self):
+        return self.size
+    
+    def is_empty(self):
+        return self.size == 0
 
     # Problem 3: Write code to evaluate a postfix expression using stack and return the integer value
     # Use stack which you implemented above for this problem
