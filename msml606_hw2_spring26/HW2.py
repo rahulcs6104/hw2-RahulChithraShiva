@@ -1,4 +1,33 @@
 import csv
+
+def preorder(node,output):
+    if node is None:
+        return
+    output.append(node.val)
+    preorder(node.left,output)
+    preorder(node.right,output)
+
+def inorder(node,output,sign):
+    if node is None:
+        return
+    if node.val in sign: #if it is a sign
+        output.append("(")
+        inorder(node.left,output,sign)
+        output.append(node.val)
+        inorder(node.right,output,sign)
+        output.append(")")
+    else:            #if it is a number
+        output.append(node.val)
+
+def postorder(node,output):
+    if node is None:
+        return
+    postorder(node.left,output)
+    postorder(node.right,output)
+    output.append(node.val)
+
+
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -30,20 +59,14 @@ class HomeWork2:
 
         for i in input:
             if i not in sign: #if it is a number
-                num_node = Treenode(i)
+                num_node = TreeNode(i)
                 temp_stack.append(num_node)
             else:             #if it is a sign
                 sign_node = TreeNode(i)
                 sign_node.right = temp_stack.pop()
                 sign_node.left = temp_stack.pop()
                 temp_stack.append(sign_node)
-        return stack.pop()
-
-                
-
-
-
-
+        return temp_stack.pop()
 
 
 
@@ -51,9 +74,10 @@ class HomeWork2:
     # return an array of elements of a prefix expression
     # expected output for the tree from problem 1 is [*,+,3,4,2]
     # you can see the examples in p2_traversals.csv
-
     def prefixNotationPrint(self, head: TreeNode) -> list:
-        pass
+        output=[]
+        preorder(head,output)
+        return output
 
     # Problem 2.2: Use in-order traversal (left, root, right) for infix notation with appropriate parentheses.
     # return an array of elements of an infix expression
@@ -65,7 +89,10 @@ class HomeWork2:
     # treat parentheses as individual elements in the returned list (see output)
 
     def infixNotationPrint(self, head: TreeNode) -> list:
-        pass
+        output=[]
+        sign = ["+","-","/","*"]
+        inorder(head,output,sign)
+        return output
 
 
     # Problem 2.3: Use post-order traversal (left, right, root) to generate postfix notation.
@@ -74,7 +101,9 @@ class HomeWork2:
     # you can see the examples in p2_traversals.csv
 
     def postfixNotationPrint(self, head: TreeNode) -> list:
-        pass
+        output=[]
+        postorder(head,output)
+        return output
 
 
 class Stack:
