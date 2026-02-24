@@ -117,28 +117,29 @@ class Stack:
 
     def __init__(self):
         self.list=[]
-        self.size = 0
+        self.count = 0
         self.top = -1 
 
     def push(self,value):
         self.list.append(value)
-        size += 1
-        top += 1
+        self.count += 1
+        self.top += 1
 
 
     def pop(self):
         if self.size == 0:
             raise IndexError("Stack is empty , cannot pop")
-        pop_num = self.list.remove(top)
-        size -= 1
-        top -= 1
+        pop_num = self.list[self.top]
+        self.list.pop()
+        self.count -= 1
+        self.top -= 1
         return pop_num
 
     def size(self):
-        return self.size
+        return self.count
     
     def is_empty(self):
-        return self.size == 0
+        return self.count == 0
 
     # Problem 3: Write code to evaluate a postfix expression using stack and return the integer value
     # Use stack which you implemented above for this problem
@@ -153,9 +154,28 @@ class Stack:
 
     # DO NOT USE EVAL function for evaluating the expression
 
-    def evaluatePostfix(exp: str) -> int:
-        # TODO: implement this using your Stack class
-        pass
+    def evaluatePostfix(self,exp: str) -> int:
+        lst = exp.split()
+        sign = ["+","-","/","*"]
+        for i in lst:
+            if i not in sign: #i is a number
+                self.push(int(i))
+            else:           #i is a sign
+                right = self.pop()
+                left = self.pop()
+                match i:
+                    case "+":
+                        self.push(left+right)
+                    case "-":
+                        self.push(left-right)
+                    case "*":
+                        self.push(left*right)
+                    case "/":
+                        if right == 0:
+                            raise ZeroDivisionError("The denominator is 0 and will result in infinity")
+                        num = int(left/right)
+                        self.push(num)
+        return self.pop()
 
 
 # Main Function. Do not edit the code below
