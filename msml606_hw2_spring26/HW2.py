@@ -37,21 +37,6 @@ class TreeNode:
 
 class HomeWork2:
 
-    # Problem 1: Construct an expression tree (Binary Tree) from a postfix expression
-    # input -> list of strings (e.g., [3,4,+,2,*])
-    # this is parsed from p1_construct_tree.csv (check it out for clarification)
-
-    # there are no duplicate numeric values in the input
-    # support basic operators: +, -, *, /
-
-    # output -> the root node of the expression tree. Here: [*,+,2,3,4,None,None]
-    # Tree Node with * as root node, the tree should be as follows
-    #         *
-    #        / \
-    #       +   2
-    #      / \
-    #     3   4
-
     def constructBinaryTree(self, input) -> TreeNode:
         
         sign = ["+","-","/","*"]
@@ -68,26 +53,14 @@ class HomeWork2:
                 temp_stack.append(sign_node)
         return temp_stack.pop()
 
-
-
-    # Problem 2.1: Use pre-order traversal (root, left, right) to generate prefix notation
-    # return an array of elements of a prefix expression
-    # expected output for the tree from problem 1 is [*,+,3,4,2]
-    # you can see the examples in p2_traversals.csv
+    #preorder of the elements of the tree, uses a helper function called preorder[it is in the top of the file , outside the class]
     def prefixNotationPrint(self, head: TreeNode) -> list:
         output=[]
         preorder(head,output)
         return output
 
-    # Problem 2.2: Use in-order traversal (left, root, right) for infix notation with appropriate parentheses.
-    # return an array of elements of an infix expression
-    # expected output for the tree from problem 1 is [(,(,3,+,4,),*,2,)]
-    # you can see the examples in p2_traversals.csv
-
-    # don't forget to add parentheses to maintain correct sequence
-    # even the outermost expression should be wrapped
-    # treat parentheses as individual elements in the returned list (see output)
-
+    #inorder of the elements of the tree, uses a helper function called inorder[it is in the top of the file , outside the class]
+    #little different concept for using the '(' and ')'
     def infixNotationPrint(self, head: TreeNode) -> list:
         output=[]
         sign = ["+","-","/","*"]
@@ -95,11 +68,7 @@ class HomeWork2:
         return output
 
 
-    # Problem 2.3: Use post-order traversal (left, right, root) to generate postfix notation.
-    # return an array of elements of a postfix expression
-    # expected output for the tree from problem 1 is [3,4,+,2,*]
-    # you can see the examples in p2_traversals.csv
-
+    #postorder of the elements of the tree, uses a helper function called postorder[it is in the top of the file , outside the class]
     def postfixNotationPrint(self, head: TreeNode) -> list:
         output=[]
         postorder(head,output)
@@ -107,14 +76,9 @@ class HomeWork2:
 
 
 class Stack:
-    # Implement your stack using either an array or a list
-    # (i.e., implement the functions based on the Stack ADT we covered in class)
-    # You may use Python's list structure as the underlying storage.
-    # While you can use .append() to add elements, please ensure the implementation strictly follows the logic we discussed in class
-    # (e.g., manually managing the "top" of the stack
-    
-    # Use your own stack implementation to solve problem 3
 
+    #i have kept a variable called count to keep track of the size.
+    #couldn't name it size as it has a conflict with the size function.
     def __init__(self):
         self.list=[]
         self.count = 0
@@ -127,8 +91,8 @@ class Stack:
 
 
     def pop(self):
-        if self.size == 0:
-            raise IndexError("Stack is empty , cannot pop")
+        if self.count == 0:
+            raise IndexError("Stack is empty , cannot pop") #raises an error here as there is no element to pop or remove
         pop_num = self.list[self.top]
         self.list.pop()
         self.count -= 1
@@ -141,40 +105,38 @@ class Stack:
     def is_empty(self):
         return self.count == 0
 
-    # Problem 3: Write code to evaluate a postfix expression using stack and return the integer value
-    # Use stack which you implemented above for this problem
-
-    # input -> a postfix expression string. E.g.: "5 1 2 + 4 * + 3 -"
-    # see the examples of test entries in p3_eval_postfix.csv
-    # output -> integer value after evaluating the string. Here: 14
-
-    # integers are positive and negative
-    # support basic operators: +, -, *, /
-    # handle division by zero appropriately
-
-    # DO NOT USE EVAL function for evaluating the expression
 
     def evaluatePostfix(self,exp: str) -> int:
         lst = exp.split()
+        if len(lst) == 0: #empty postfix expression edge case(if the input is empty) [edge case]
+            raise ValueError("Empty postfix expression")
         sign = ["+","-","/","*"]
         for i in lst:
             if i not in sign: #i is a number
-                self.push(int(i))
+                try:
+                    self.push(int(i)) #negative values also handled [edge case]
+                except ValueError: #if the value is invalid like "1df4" [edge case]
+                    raise ValueError(f"Invalid value = {i}")
             else:           #i is a sign
-                right = self.pop()
-                left = self.pop()
-                match i:
+                try:
+                    right = self.pop() #negative values also handled [edge case]
+                    left = self.pop()#negative values also handled [edge case]
+                except IndexError:   #if the stack doesn't have enough variables to pop [edge case]
+                    raise ValueError("Malformed postfix expression")
+                match i: #switch case to do coorect operation based on the sign
                     case "+":
-                        self.push(left+right)
+                        self.push(left+right) 
                     case "-":
                         self.push(left-right)
                     case "*":
                         self.push(left*right)
                     case "/":
-                        if right == 0:
+                        if right == 0:#dividing by zero will result is infinity , so raise an error [edge case]
                             raise ZeroDivisionError("The denominator is 0 and will result in infinity")
-                        num = int(left/right)
+                        num = int(left/right)#negative values also handled [edge case]
                         self.push(num)
+        if self.count != 1: #if the stack has more number or sign left than what can be handled [edge case]
+            raise ValueError("Malformed postfix expression")
         return self.pop()
 
 
