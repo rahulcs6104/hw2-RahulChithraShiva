@@ -1,3 +1,9 @@
+# AI usage/external usage statement
+
+# 1)I have referred to this material from w3schools.com to get my concepts brushed up on stacks:
+# https://www.w3schools.com/python/python_dsa_stacks.asp
+
+# 2) I have not used any AI for this assignment
 import csv
 
 def preorder(node,output):
