@@ -41,16 +41,22 @@ class HomeWork2:
         
         sign = ["+","-","/","*"]
         temp_stack = []
-
+        if len(input) == 0 or input == ['']: # empty input edge case [edge case]
+            raise ValueError("Empty expression")
         for i in input:
             if i not in sign: #if it is a number
                 num_node = TreeNode(i)
                 temp_stack.append(num_node)
             else:             #if it is a sign
-                sign_node = TreeNode(i)
-                sign_node.right = temp_stack.pop()
-                sign_node.left = temp_stack.pop()
+                try:
+                    sign_node = TreeNode(i)
+                    sign_node.right = temp_stack.pop()
+                    sign_node.left = temp_stack.pop() # if not enough operands, pop will raise IndexError [edge case]
+                except IndexError:
+                    raise ValueError("Malformed expression - insufficient operands for operator") #[edge case]
                 temp_stack.append(sign_node)
+        if len(temp_stack) != 1: # more than one node left means too many operands [edge case]
+            raise ValueError("Malformed expression - too many operands") #[edge case]
         return temp_stack.pop()
 
     #preorder of the elements of the tree, uses a helper function called preorder[it is in the top of the file , outside the class]
